@@ -1,0 +1,25 @@
+#!/bin/sh /etc/rc.common
+
+START=99
+
+SERVICE_DAEMONIZE=1
+SERVICE_WRITE_PID=1
+USE_PROCD=1
+DIR=$(cat /etc/profile | grep sbdir | awk -F "\"" '{print $2}')
+
+start_service() {
+  procd_open_instance
+  procd_set_param respawn
+  procd_set_param stderr 0
+  procd_set_param stdout 0
+  procd_set_param command $DIR/sing-box run -c $DIR/config.json
+  procd_close_instance
+}
+
+service_started() {
+  $DIR/sb.sh start_tproxy
+}
+
+service_stopped() {
+  $DIR/sb.sh stop_tproxy
+}
