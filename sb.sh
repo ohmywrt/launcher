@@ -252,14 +252,14 @@ subscribe() {
 welcome() {
   # 检查是否有进程
   local pid=$(pidof sing-box | awk '{print $NF}')
+  local version=$($rootdir/sing-box version | grep "sing-box version" | awk '{print $3}')
   echo -----------------------------------------------
-  echo -e "\033[30;46m欢迎使用OhMySB！\033[0m                版本: \033[32m1.0.0\033[0m"
+  echo -e "\033[30;46m欢迎使用OhMySB！\033[0m\t版本: \033[32m$version\033[0m"
   # 显示DNS模式
   if [ -n "$pid" ];then
-    echo -e "sb进程: \033[32m$pid\033[0m"
     local rss=`cat /proc/$pid/status | grep -w VmRSS | awk '{print $2,$3}'`
     local s=$((($(date +%s) - $(date +%s -r /proc/$pid))))
-    echo -e "当前内存占用: \033[44m"$rss"\033[0m                已运行: \033[44m$((s/3600))小时$(((s%3600)/60))分钟$((s%60))秒\033[0m"
+    echo -e "sb进程: \033[32m$pid\033[0m\t当前内存占用: \033[44m"$rss"\033[0m\t已运行: \033[44m$((s/3600))小时$(((s%3600)/60))分钟$((s%60))秒\033[0m"
   else
     echo -e "SB服务: \033[31m未运行\033[0m"
   fi
